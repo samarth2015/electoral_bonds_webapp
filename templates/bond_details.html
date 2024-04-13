@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Bond Details</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+</head>
+<body style="background-color: #393646;">
+    <div width="100%" style="width: 100%;">
+        <form action="/go_to_home" method="POST" class="form-container" style="display: flex; justify-content: flex-end;">
+            <input type="submit" class="btn btn-primary" value="Go to home" style="background-color: #F4EEE0; color: #4F4557; font-weight: 500; border: #F4EEE0; margin: 2%; margin-right: 5%;">
+        </form>
+    </div>
+
+    {% if show_chart_pie %}
+    <div style="width: 100%; height: 100%; background-color: #4F4557;">
+        <button class="btn btn-primary float-end" onclick="downloadpie()" style="background-color: #4F4557; color: #F4EEE0; font-weight: 500; border: #F4EEE0; margin: 5%; display: flex; align-self: flex-end;"><span class="bi bi-download">Download Chart</span></button>
+    </div>
+    
+    <script>
+        function downloadpie() {
+            var canvas = document.getElementById("pieChart");
+            var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+            var a = document.createElement('a');
+            a.href = image;
+            a.download = 'chart.png';
+            a.click();
+        }
+    </script>
+
+    <div style="background-color: #F4EEE0;">
+        <canvas id="pieChart" style="margin: 5%; height: 50%;"></canvas>
+    </div>
+    <script>
+        const chartCtx = document.getElementById('pieChart');
+        // var x_pie = {{x_pie|tojson}};
+        // var y_pie = {{y_pie|tojson}};
+        var x_pie = JSON.parse('{{x_pie|tojson}}');
+        var y_pie = JSON.parse('{{y_pie|tojson}}');
+        new Chart(chartCtx, {
+            type: 'pie',
+            data: {
+                labels: x_pie,
+                datasets: [{
+                    label: 'Amount Encashed in Lakhs',
+                    data: y_pie,
+                    borderWidth: 0.3,
+                    hoverOffset: 40
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    },
+                    tooltip: {
+                        enabled: true,
+                        mode: 'nearest',
+                        intersect: false,
+                        bodySpacing: 8,
+                        titleSpacing: 6,
+                        cornerRadius: 8,
+                        caretSize: 8,
+                    }
+                }
+            }
+        });
+    </script>
+    {% endif %}
+
+    {% if show_chart %}
+    <div style="margin-left: 5%; margin-right: 5%;">
+        <table class="table table-dark table-striped table-hover" width="100%">
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Bonds per Year</th>
+                    <th>Total Amount In Lakhs Rupees</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range((y_axis|length)) %}
+                <tr>         
+                    <td>{{x_axis[i]}}</td>
+                    <td>{{bonds_per_year[i]}}</td>
+                    <td>{{y_axis[i]}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div style="width: 100%; height: 100%; background-color: #4F4557;">
+        <button class="btn btn-primary float-end" onclick="download()" style="background-color: #4F4557; color: #F4EEE0; font-weight: 500; border: #F4EEE0; margin: 5%; display: flex; align-self: flex-end;"><span class="bi bi-download">Download Chart</span></button>
+    </div>
+    
+    <script>
+        function download() {
+            var canvas = document.getElementById("myChart");
+            var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+            var a = document.createElement('a');
+            a.href = image;
+            a.download = 'chart.png';
+            a.click();
+        }
+    </script>
+    <div style="background-color: #F4EEE0; font-weight: bold; font-size: larger; color: white;">
+        <canvas id="myChart" style="margin:5%;"></canvas>
+    </div>
+    
+    <script>
+        const ctx = document.getElementById('myChart');
+        let x_axis = JSON.parse('{{x_axis|tojson}}');
+        let y_axis = JSON.parse('{{y_axis|tojson}}');
+        new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: x_axis,
+            datasets: [{
+                label: 'Amount in Lakhs',
+                data: y_axis,
+                borderWidth: 1,
+                hoverOffset: 40,
+                backgroundColor: ['##4F455788'],
+                borderWidth: 1,
+                borderColor: ['#4F4557'],
+                borderRadius: 10,
+            }]
+        },
+        options: {
+            scales: {
+            y: {
+                beginAtZero: true
+            }
+            },
+            animations: {
+                tension: {
+                    duration: 1000,
+                    easing: 'linear',
+                    from: 1,
+                    to: 0,
+                    loop: true,
+                    delay:2000
+                }
+            },
+            plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font:{
+                                size: 20,
+                            }
+                        },
+                    },
+                    tooltip: {
+                        enabled: true,
+                        mode: 'nearest',
+                        intersect: false,
+                        bodySpacing: 8,
+                        titleSpacing: 6,
+                        cornerRadius: 8,
+                        caretSize: 8,
+                    }
+                }
+        }
+        });
+    </script>
+    {% endif %}
+    <div style="margin: 10px;">
+        
+        <div style="width: 100%; height: 100%; background-color: #393646; display: flex;  align-content: flex-end;">
+                <input type="text" id="filterInput" placeholder="Search for any Record" style="background-color: #4F4557; color: #F4EEE0; font-weight: 500; border-color: #F4EEE0; margin: 2%; border-width:3px;  border-style:groove; border-color: #4F4557; width: 100%;">
+        </div>
+
+        <table class="table table-dark table-striped table-hover">
+            <thead>
+                <tr>
+                    {% for i in range((table_header|length)) %}
+                    <th>{{table_header[i]}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                {% for i in range((table_rows|length)) %}
+                <tr>
+                    {% for j in range((table_rows[i]|length)) %}
+                    <td>{{table_rows[i][j]}}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <script>
+            const filterInput = document.getElementById('filterInput');
+            const tableBody = document.getElementById('tableBody');
+
+            filterInput.addEventListener('keyup', function () {
+                const filterValue = filterInput.value.toLowerCase();
+                const rows = tableBody.getElementsByTagName('tr');
+
+                for (let i = 0; i < rows.length; i++) {
+                    const cells = rows[i].getElementsByTagName('td');
+                    let rowVisible = false;
+
+                    for (let j = 1; j < cells.length; j++) {
+                        const cellValue = cells[j].textContent || cells[j].innerText;
+
+                        if (cellValue.toLowerCase().indexOf(filterValue) > -1) {
+                            rowVisible = true;
+                            break;
+                        }
+                    }
+
+                    if (rowVisible) {
+                        rows[i].style.display = '';
+                    } else {
+                        rows[i].style.display = 'none';
+                    }
+                }
+            });
+        </script>
+    </div>
+    
+    
+    
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>
