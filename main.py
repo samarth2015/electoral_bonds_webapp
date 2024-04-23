@@ -1,3 +1,4 @@
+Password = ""
 from flask import Flask, render_template, request, session
 from flask_mysqldb import MySQL
 
@@ -6,7 +7,7 @@ app.secret_key = 'efHJHD7SK7834#d$hjd(*&^%$#'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = '20052005@sam'
+app.config['MYSQL_PASSWORD'] = Password
 app.config['MYSQL_DB'] = 'bonds'
 
 mysql = MySQL(app)
