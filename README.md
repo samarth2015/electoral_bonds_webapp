@@ -16,8 +16,9 @@ CREATE USER 'testing'@'%' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON *.* TO 'testing'@'%' WITH GRANT OPTION;
 4. Open terminal, and install flask and flask-mysqldb by following command.
 pip install Flask Flask-MySQLdb
-5. Run the main.py file, website will be live on localhost.
-6. Visit the link which appears in the terminal to open the website.
+5. Open the main.py file, on the first line of code write your MYSQL password as string.
+6. Run the main.py file, website will be live on localhost.
+7. Visit the link which appears in the terminal to open the website.
 
 ## Screenshot
 ![Screenshot 2024-04-23 114522](https://github.com/samarth2015/electoral_bonds_website/assets/143396640/4df05d30-d67c-4406-bd77-5caf871f187a)
