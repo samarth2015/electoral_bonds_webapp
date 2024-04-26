@@ -208,5 +208,5 @@ def get_pie():
         return render_template("pie.html", x_axis = list(result.keys()), y_axis = list(result.values()))
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port="80", debug = True)
+    app.run(host="0.0.0.0", port="80")
     # app.run(debug = True) 
